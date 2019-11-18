@@ -34,16 +34,12 @@ def sendMail():
     while checkUnique(list_to_shuffle, ref_list):
         random.shuffle(list_to_shuffle)
 
-    for giver, taker in zip(list_to_shuffle, ref_list):
-        print(giver, "ger till", taker)
-        return
     try:
         port = 465
-        printDebug("ASD")
         context = ssl.create_default_context()
 
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-            server.login(_sender_mail, _sender_mailpassword)
+            server.login(str(_sender_mail), str(_sender_mailpassword))
 
             for giver, taker in zip(list_to_shuffle, ref_list):
                 msg = 'Subject: {}\n\n{}'.format("Din julklappsperson", "Grattis du ska ge en present till " + p_dict[taker])
@@ -60,10 +56,7 @@ def checkUnique(list1, list2):
     return False
 
 def addDebug():
-    _sender_mail.set("hemligajulafton@gmail.com")
-    _sender_mailpassword.set("secretSanta")
-
-    for i in range(3):
+    for i in range(2):
         addParticipant()
 
     _all_participants[0][0].insert(0, "anton.fluch@gmail.com")
@@ -74,7 +67,27 @@ def addDebug():
 def printDebug(*msg):
     print(msg)
 
+def printParticipants():
+    p_dict = {}
+
+    for mail, name in _all_participants:
+        p_dict[mail.get()] = name.get()
+    
+    list_to_shuffle = list(p_dict.keys())
+    ref_list = list_to_shuffle[:]
+
+    while checkUnique(list_to_shuffle, ref_list):
+        random.shuffle(list_to_shuffle)
+
+    for giver, taker in zip(list_to_shuffle, ref_list):
+        print(giver, "ger till", p_dict[taker])
+
+    print('-' * 40)
+    printDebug(str(_sender_mail.get()), str(_sender_mailpassword.get()))
+
+
 if __name__ == "__main__":
+    debug_flag = 1
     # LIST TO HOLD ALL PARTICIPANTS
     _all_participants = []
 
@@ -102,11 +115,14 @@ if __name__ == "__main__":
     _participants_mailframe.columnconfigure(0, weight=1)
     _participants_mailframe.rowconfigure(0, weight=1)
 
-    _add_participant_button = Button(_participants_mailframe, text='Add', command=addParticipant, height=1, width=1)
+    _add_participant_button = Button(_participants_mailframe, text='Add participant', command=addParticipant, height=1, width=10)
     _add_participant_button.grid(row=0, column=3, sticky=(W, N))
 
     _send_mail_button = Button(_participants_mailframe, text='Send mail', command=sendMail, height=1)
-    _send_mail_button.grid(row=len(_all_participants) + 1, column=3, sticky=(W, N))
+    _send_mail_button.grid(row=1, column=3, sticky=(W, N))
+    
+    _print_participant_button = Button(_participants_mailframe, text='Console print', command=printParticipants, height=1, width=10)
+    _print_participant_button.grid(row=2, column=3, sticky=(W, N))
 
     _status_frame = ttk.Frame(_root, relief='sunken', padding='2 2 2 2')
     _status_frame.grid(row=1, column=0, sticky=(E, W, S))
@@ -115,6 +131,7 @@ if __name__ == "__main__":
     _status = ttk.Label(_status_frame, textvariable=_status_msg, anchor=W)
     _status.grid(row=0, column=0, sticky=(E, W))
 
-    addDebug()
+    if debug_flag:
+        addDebug()
     
     _root.mainloop()
