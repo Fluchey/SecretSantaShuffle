@@ -1,2 +1,2 @@
-examplemail@abc.com:NameOfPerson1
-examplemail2@abc.com:NameOfPerson2
+Person1@mail.com:Person1Name
+Person2@mail.com:Person2Name

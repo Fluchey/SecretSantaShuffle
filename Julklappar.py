@@ -21,7 +21,7 @@ def sendMail(participants, listToShuffle, secondList):
         server.login("hemligajulafton@gmail.com", password)
 
         for giver, taker in zip(listToShuffle, secondList):
-            msg = 'Subject: {}\n\n{}'.format("Din julklappsperson", "Grattis! Du ska ge en present till " + participants[taker])
+            msg = 'Subject: {}\n\n{}'.format("Din julklappsperson", "God Jul! Du ska ge en julklapp till " + participants[taker] +". Den ska kosta max 300kr.")
             server.sendmail("hemligajulafton@gmail.com", giver, msg)
 
 parser = argparse.ArgumentParser(description='Send secret santa mail')
